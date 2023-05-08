@@ -1,0 +1,75 @@
++---+--------------------+
+| id|                traj|
++---+--------------------+
+|  1|[WrappedArray(116...|
+|160|[WrappedArray(116...|
+|468|[WrappedArray(116...|
+|367|[WrappedArray(116...|
+|355|[WrappedArray(116...|
+|301|[WrappedArray(116...|
+|283|[WrappedArray(116...|
+|133|[WrappedArray(116...|
+|246|[WrappedArray(116...|
+|159|[WrappedArray(116...|
++---+--------------------+
+
++---+--------------------+
+| id|                traj|
++---+--------------------+
+|  1|[WrappedArray(116...|
+|301|[WrappedArray(116...|
+|355|[WrappedArray(116...|
+|468|[WrappedArray(116...|
+|160|[WrappedArray(116...|
+|133|[WrappedArray(116...|
+|367|[WrappedArray(116...|
+|159|[WrappedArray(116...|
+|246|[WrappedArray(116...|
+|340|[WrappedArray(116...|
++---+--------------------+
+
++---+--------------------+
+| id|                traj|
++---+--------------------+
+|  1|[WrappedArray(116...|
+|301|[WrappedArray(116...|
+|355|[WrappedArray(116...|
+|468|[WrappedArray(116...|
+|395|[WrappedArray(116...|
+|249|[WrappedArray(116...|
+|357|[WrappedArray(116...|
+|160|[WrappedArray(116...|
+|133|[WrappedArray(116...|
+|340|[WrappedArray(116...|
++---+--------------------+
+
++---+--------------------+
+| id|                traj|
++---+--------------------+
+|  1|[WrappedArray(116...|
+|301|[WrappedArray(116...|
+|249|[WrappedArray(116...|
+|395|[WrappedArray(116...|
+|355|[WrappedArray(116...|
+|154|[WrappedArray(116...|
+|357|[WrappedArray(116...|
+|468|[WrappedArray(116...|
+|171|[WrappedArray(116...|
+| 46|[WrappedArray(116...|
++---+--------------------+
+
++---+--------------------+
+| id|                traj|
++---+--------------------+
+|  1|[WrappedArray(116...|
+|249|[WrappedArray(116...|
+|395|[WrappedArray(116...|
+|171|[WrappedArray(116...|
+|301|[WrappedArray(116...|
+|154|[WrappedArray(116...|
+| 88|[WrappedArray(116...|
+|260|[WrappedArray(116...|
+| 46|[WrappedArray(116...|
+| 45|[WrappedArray(116...|
++---+--------------------+
+

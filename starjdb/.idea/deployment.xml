@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="131-195" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+    <option name="confirmBeforeUploading" value="false" />
+    <serverData>
+      <paths name="131-195">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/work/strajdb" local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$/compute" />
+            <mapping local="$PROJECT_DIR$/query" />
+            <mapping local="$PROJECT_DIR$/grid" />
+            <mapping local="$PROJECT_DIR$/core" />
+            <mapping local="$PROJECT_DIR$/assembler" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
