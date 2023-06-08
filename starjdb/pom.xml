@@ -20,8 +20,8 @@
         <module>assembler</module>
         <module>grid</module>
         <module>query</module>
-        <module>compute</module>
         <module>pushdown</module>
+        <module>mor</module>
     </modules>
 
     <properties>
@@ -31,7 +31,7 @@
         <dapr.version>1.8.0-rc-1</dapr.version>
         <geotools.version>28.1</geotools.version>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <iceberg.version>1.2.0-SNAPSHOT-V2</iceberg.version>
+        <iceberg.version>1.2.0</iceberg.version>
         <awssdk.version>2.20.4</awssdk.version>
         <logback.version>1.1.7</logback.version>
         <jackson.jts.version>2.4</jackson.jts.version>
