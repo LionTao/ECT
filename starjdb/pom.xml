@@ -22,13 +22,14 @@
         <module>query</module>
         <module>pushdown</module>
         <module>mor</module>
+        <module>compute</module>
     </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dapr.version>1.8.0-rc-1</dapr.version>
+        <dapr.version>1.8.0</dapr.version>
         <geotools.version>28.1</geotools.version>
         <maven.deploy.skip>true</maven.deploy.skip>
         <iceberg.version>1.2.0</iceberg.version>
