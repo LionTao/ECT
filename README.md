@@ -8,6 +8,7 @@ Real-time distributed trajectory distance calculation system based on elastic lo
 ```shell
 git clone https://github.com/LionTao/strajdb-thesis.git
 cd strajdb-thesis/strajdb
+docker compose up -d
 mvn -T2C clean compile package install
 dapr run --app-id assembler --app-port 3000 -- mvn -pl assembler spring-boot:run
 dapr run --app-id assembler --app-port 3001 -- mvn -pl grid spring-boot:run
