@@ -1,8 +1,6 @@
-package cn.edu.suda.ada.strajdb.query.ch5;
+package query.ch5;
 
-import alluxio.AlluxioURI;
-import alluxio.client.file.FileInStream;
-import cn.edu.suda.ada.strajdb.query.RTreeIDBench;
+import alluxio.exception.AlluxioException;
 import com.github.davidmoten.rtree2.RTree;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import com.github.davidmoten.rtree2.geometry.Rectangle;
@@ -17,8 +15,13 @@ import org.apache.hadoop.fs.Path;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-public class HDFSID {
+public class HDFSTopK {
+
     @Data
     @Builder
     private static class Result {
@@ -29,17 +32,22 @@ public class HDFSID {
     }
 
     private static final Configuration hadoopConfig = new Configuration();
+    private static final org.apache.hadoop.fs.FileSystem fileSystem;
 
     static {
         hadoopConfig.set("fs.defaultFS", "131-195:8020");
         hadoopConfig.setBoolean("dfs.client.use.datanode.hostname", true);
         hadoopConfig.set("dfs.replication", "3");
         hadoopConfig.setBoolean("fs.hdfs.impl.disable.cache", true);
-        hadoopConfig.set("dfs.client.block.write.replace-datanode-on-failure.policy","NEVER");
+        hadoopConfig.set("dfs.client.block.write.replace-datanode-on-failure.policy", "NEVER");
+        try {
+            fileSystem = FileSystem.get(hadoopConfig);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void main(String[] args) throws IOException {
-        org.apache.hadoop.fs.FileSystem fileSystem = FileSystem.get(hadoopConfig);
         List<Result> csvResult = new LinkedList<>();
         RTree<String, Rectangle> tree = RTree.star().maxChildren(6).create();
         HashMap<String, Rectangle> bucket = new HashMap<>();
@@ -50,8 +58,8 @@ public class HDFSID {
             while ((str = in.readLine()) != null) {
                 String[] line = str.trim().split(",");
                 if (line.length == 5) {
-                    var parentFname = line[4].split("_")[0];
-                    var l = inverted.getOrDefault(parentFname, new LinkedList<>());
+                    String parentFname = line[4].split("_")[0];
+                    List<String> l = inverted.getOrDefault(parentFname, new LinkedList<>());
                     l.add(line[4]);
                     inverted.put(parentFname, l);
                     var env = Geometries.rectangle(Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2]), Double.parseDouble(line[3]));
@@ -62,45 +70,47 @@ public class HDFSID {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(inverted.size());
-        int QUERIES = 5000;
-        List<String> keysAsArray = new ArrayList<>(bucket.keySet());
-        Random r = new Random();
-        var candidatesSet = new LinkedList<String>();
+        int QUERIES = 40;
+        List<String> keysAsArray = bucket.keySet().stream().sorted().collect(Collectors.toList());
+        var candidatesSet = new LinkedList<Iterable<com.github.davidmoten.rtree2.Entry<String, Rectangle>>>();
         for (int i = 0; i < QUERIES; i++) {
-            candidatesSet.add(keysAsArray.get(r.nextInt(keysAsArray.size())));
+            candidatesSet.add(tree.search(bucket.get(keysAsArray.get(i))));
         }
         int i = 0;
         long start = System.currentTimeMillis();
         for (var candidates : candidatesSet) {
             i++;
             var curr = System.currentTimeMillis();
-            var parent = candidates.split("_")[0];
-
-            //read
-            String trajPath = "/hdfsexp/tdrive/" + parent + ".txt";
-            Path hdfsPath = new Path(trajPath);
-            var in = fileSystem.open(hdfsPath);
-            StringBuilder resultStringBuilder = new StringBuilder();
-            try (BufferedReader br
-                         = new BufferedReader(new InputStreamReader(in))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    resultStringBuilder.append(line).append("\n");
-                }
+            Set<String> garden = new HashSet<>();
+            for (var f :
+                    candidates) {
+                // gather trajectory id
+                garden.add(f.value().split("_")[0]);
             }
-            var t = resultStringBuilder.toString().length();
-
-
-            if (i%1000==0){
-                System.out.printf("hdfs %d\n", System.currentTimeMillis() - start);
-                csvResult.add(Result.builder()
-                        .QueryNo(i)
-                        .Name("hdfs")
-                        .time(System.currentTimeMillis() - start)
-                        .TrajSize(1)
-                        .build());
+            ExecutorService pool = Executors.newFixedThreadPool(10);
+            for (String fname :
+                    garden) {
+                pool.execute(() -> {
+                    try {
+                        readOneTraj(fname, inverted);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             }
+            pool.shutdown();
+            try {
+                var t = pool.awaitTermination(9999, TimeUnit.DAYS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.printf("hdfs %d\n", System.currentTimeMillis() - start);
+            csvResult.add(Result.builder()
+                    .QueryNo(i)
+                    .Name("hdfs")
+                    .time(System.currentTimeMillis() - start)
+                    .TrajSize(garden.size())
+                    .build());
         }
         System.out.printf("hdfs %d\n", System.currentTimeMillis() - start);
         StringWriter sw = new StringWriter();
@@ -118,8 +128,24 @@ public class HDFSID {
                 }
             });
         }
-        BufferedWriter writer = new BufferedWriter(new FileWriter("id-hdfs.csv"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("topk-hdfs.csv"));
         writer.write(sw.toString());
+
         writer.close();
+    }
+
+    public static void readOneTraj(String fname, HashMap<String, List<String>> inverted) throws IOException, AlluxioException {
+        String trajPath = "/hdfsexp/tdrive/" + fname + ".txt";
+        Path hdfsPath = new Path(trajPath);
+        var in = fileSystem.open(hdfsPath);
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br
+                     = new BufferedReader(new InputStreamReader(in))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                resultStringBuilder.append(line).append("\n");
+            }
+        }
+        var t = resultStringBuilder.toString().length();
     }
 }

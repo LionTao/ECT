@@ -23,6 +23,7 @@
         <module>pushdown</module>
         <module>mor</module>
         <module>compute</module>
+        <module>hive-exp</module>
     </modules>
 
     <properties>

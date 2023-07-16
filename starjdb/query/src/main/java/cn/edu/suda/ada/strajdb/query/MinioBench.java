@@ -1,14 +1,10 @@
 package cn.edu.suda.ada.strajdb.query;
 
-import alluxio.AlluxioURI;
-import alluxio.client.file.FileInStream;
-import alluxio.client.file.FileSystem;
 import alluxio.exception.AlluxioException;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.errors.*;
 import org.springframework.util.StopWatch;
-import software.amazon.ion.SystemSymbols;
 
 import java.io.BufferedReader;
 import java.io.IOException;

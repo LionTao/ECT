@@ -1,21 +1,15 @@
 package cn.edu.suda.ada.strajdb.query;
 
-import com.github.davidmoten.rtree2.geometry.Geometries;
-import lombok.Builder;
-import lombok.Data;
-import lombok.var;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.PutObjectRequest;
-import com.aliyun.oss.model.PutObjectResult;
-import java.io.ByteArrayInputStream;
+import com.github.davidmoten.rtree2.geometry.Geometries;
+import lombok.Builder;
+import lombok.Data;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -28,12 +22,13 @@ import java.util.stream.Collectors;
 public class OSSBench {
     @Data
     @Builder
-    private static class Result{
+    private static class Result {
         int QueryNo;
         int TrajSize;
         long time;
         String Name;
     }
+
     // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
     static String endpoint = "https://oss-cn-shanghai.aliyuncs.com";
     // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
@@ -41,6 +36,7 @@ public class OSSBench {
     static String accessKeySecret = "np1bhVbVSTaVT9uWeYJbpeiuWKZCbV";
     // 填写Bucket名称，例如examplebucket。
     static String bucketName = "liontao-thesis";
+
     public static void main(String[] args) throws IOException {
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         TreeMap<String, List<String>> inverted = new TreeMap<String, List<String>>();
@@ -74,14 +70,14 @@ public class OSSBench {
         var candidates = (new ArrayList<>(inverted.keySet())).stream().sorted().collect(Collectors.toList());
         long start = System.currentTimeMillis();
         List<Result> csvResult = new LinkedList<>();
-        for (int i = 0; i < 7001; i=i+1000) {
-            System.out.println(i+"-"+(i+1000));
+        for (int i = 0; i < 7001; i = i + 1000) {
+            System.out.println(i + "-" + (i + 1000));
             ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
             for (var name :
-                    candidates.subList(i,i+1000)) {
+                    candidates.subList(i, i + 1000)) {
                 pool.execute(() -> {
                     try {
-                        sendMessage(name, inverted,ossClient);
+                        sendMessage(name, inverted, ossClient);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -95,11 +91,11 @@ public class OSSBench {
             }
             csvResult.add(Result.builder()
                     .Name("hdfs-3")
-                    .QueryNo(i+1000)
-                    .time(System.currentTimeMillis()-start)
+                    .QueryNo(i + 1000)
+                    .time(System.currentTimeMillis() - start)
                     .TrajSize(inverted.size())
                     .build());
-            System.out.println(System.currentTimeMillis()-start);
+            System.out.println(System.currentTimeMillis() - start);
 
         }
         System.out.println("\n\n\n\nDone.");
@@ -120,7 +116,7 @@ public class OSSBench {
         }
     }
 
-    private static void sendMessage(String name, TreeMap<String, List<String>> inverted,OSS ossClient) throws IOException {
+    private static void sendMessage(String name, TreeMap<String, List<String>> inverted, OSS ossClient) throws IOException {
         for (var part :
                 inverted.get(name)) {
 
@@ -138,7 +134,7 @@ public class OSSBench {
                 // metadata.setObjectAcl(CannedAccessControlList.Private);
                 // putObjectRequest.setMetadata(metadata);
                 // 创建PutObjectRequest对象。
-                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, "thesis/"+UUID.randomUUID(), new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8)));
+                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, "thesis/" + UUID.randomUUID(), new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8)));
                 putObjectRequest.setCallback(null);
                 putObjectRequest.setProcess(null);
                 // 上传字符串。

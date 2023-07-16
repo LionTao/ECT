@@ -1,6 +1,35 @@
 # strajdb-thesis
 Real-time distributed trajectory distance calculation system based on elastic load
 
+## Quick start
+
+> **Note**: Install [dapr](https://docs.dapr.io/getting-started/install-dapr-cli/) and docker first
+
+```shell
+git clone https://github.com/LionTao/strajdb-thesis.git
+cd strajdb-thesis/strajdb
+mvn -T2C clean compile package install
+dapr run --app-id assembler --app-port 3000 -- mvn -pl assembler spring-boot:run
+dapr run --app-id assembler --app-port 3001 -- mvn -pl grid spring-boot:run
+
+```
+
+### Pushdown experiment
+
+pushdown experiment server will start at  port 9999. 
+You need to adjust parameters in [source file](./starjdb/pushdown/src/main/java/cn/edu/suda/ada/strajdb/PushController.java)
+
+```shell
+mvn -pl pushdown spring-boot:run
+```
+
+### WIP
+
+- [ ] QueryAgent actors
+- [ ] MOR actors
+- [ ] Pushdown actors
+- [ ] Stream distance for java
+
 ## Project structure
 
 | Folder                   | Description                    |

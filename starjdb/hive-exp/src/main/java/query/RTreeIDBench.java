@@ -1,4 +1,4 @@
-package cn.edu.suda.ada.strajdb.query;
+package query;
 
 import alluxio.AlluxioURI;
 import alluxio.client.file.FileInStream;
@@ -49,11 +49,11 @@ public class RTreeIDBench {
             while ((str = in.readLine()) != null) {
                 String[] line = str.trim().split(",");
                 if (line.length == 5) {
-                    var parentFname = line[4].split("_")[0];
-                    var l = inverted.getOrDefault(parentFname, new LinkedList<>());
+                    String parentFname = line[4].split("_")[0];
+                    List<String> l = inverted.getOrDefault(parentFname, new LinkedList<>());
                     l.add(line[4]);
                     inverted.put(parentFname, l);
-                    var env = Geometries.rectangle(Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2]), Double.parseDouble(line[3]));
+                    Rectangle env = Geometries.rectangle(Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2]), Double.parseDouble(line[3]));
                     tree = tree.add(line[4], env);
                     bucket.put(line[4], env);
                 }
@@ -65,16 +65,16 @@ public class RTreeIDBench {
         int QUERIES = 5000;
         List<String> keysAsArray = new ArrayList<>(bucket.keySet());
         Random r = new Random();
-        var candidatesSet = new LinkedList<String>();
+        List<String> candidatesSet = new LinkedList<String>();
         for (int i = 0; i < QUERIES; i++) {
             candidatesSet.add(keysAsArray.get(r.nextInt(keysAsArray.size())));
         }
         int i = 0;
         long start = System.currentTimeMillis();
-        for (var candidates : candidatesSet) {
+        for (String candidates : candidatesSet) {
             i++;
-            var curr = System.currentTimeMillis();
-            var parent = candidates.split("_")[0];
+            long curr = System.currentTimeMillis();
+            String parent = candidates.split("_")[0];
             // merge files
             AlluxioURI path = new AlluxioURI("/garden/" + candidates);
             if (false) {
@@ -89,7 +89,7 @@ public class RTreeIDBench {
                         resultStringBuilder.append(line).append("\n");
                     }
                 }
-                var t = resultStringBuilder.toString().length();
+                int t = resultStringBuilder.toString().length();
             } else {
                 StringBuilder resultStringBuilder = new StringBuilder();
                 for (String sfname :
@@ -104,7 +104,7 @@ public class RTreeIDBench {
                         }
                     }
                 }
-                var temp = resultStringBuilder.toString();
+                String temp = resultStringBuilder.toString();
                 // write big file
 //                FileOutStream out = fs.createFile(path);
 //                out.write(resultStringBuilder.toString().getBytes(StandardCharsets.UTF_8));

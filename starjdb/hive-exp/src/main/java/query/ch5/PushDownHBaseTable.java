@@ -1,4 +1,4 @@
-package cn.edu.suda.ada.strajdb.query.ch5;
+package query.ch5;
 
 import lombok.var;
 import org.apache.hadoop.conf.Configuration;

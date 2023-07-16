@@ -1,9 +1,7 @@
-package cn.edu.suda.ada.strajdb.query;
+package query;
 
-import com.github.davidmoten.rtree2.geometry.Geometries;
 import lombok.Builder;
 import lombok.Data;
-import lombok.var;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.hadoop.conf.Configuration;
@@ -61,11 +59,11 @@ public class HBaseBench {
             while ((str = in.readLine()) != null) {
                 String[] line = str.trim().split(",");
                 if (line.length == 5) {
-                    var parentFname = line[4].split("_")[0];
-                    var l = inverted.getOrDefault(parentFname, new LinkedList<>());
+                    String parentFname = line[4].split("_")[0];
+                    List<String> l = inverted.getOrDefault(parentFname, new LinkedList<>());
                     l.add(line[4]);
                     inverted.put(parentFname, l);
-                    var env = Geometries.rectangle(Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2]), Double.parseDouble(line[3]));
+//                    var env = Geometries.rectangle(Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2]), Double.parseDouble(line[3]));
                 }
             }
         } catch (IOException e) {
@@ -81,13 +79,13 @@ public class HBaseBench {
 
 
         int NUM_THREADS = 1000;
-        var candidates = (new ArrayList<>(inverted.keySet())).stream().sorted().collect(Collectors.toList());
+        List<String> candidates = (new ArrayList<>(inverted.keySet())).stream().sorted().collect(Collectors.toList());
         long start = System.currentTimeMillis();
         List<Result> csvResult = new LinkedList<>();
         for (int i = 0; i < 7001; i = i + 1000) {
             System.out.println(i + "-" + (i + 1000));
             ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
-            for (var name :
+            for (String name :
                     candidates.subList(i, i + 1000)) {
                 pool.execute(() -> {
                     try {
@@ -99,7 +97,7 @@ public class HBaseBench {
             }
             pool.shutdown();
             try {
-                var t = pool.awaitTermination(9999, TimeUnit.DAYS);
+                pool.awaitTermination(9999, TimeUnit.DAYS);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -113,8 +111,8 @@ public class HBaseBench {
 
         }
         ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
-        for (var name :
-                candidates.subList(8000,candidates.size())) {
+        for (String name :
+                candidates.subList(8000, candidates.size())) {
             pool.execute(() -> {
                 try {
                     sendMessage(name, inverted);
@@ -125,7 +123,7 @@ public class HBaseBench {
         }
         pool.shutdown();
         try {
-            var t = pool.awaitTermination(9999, TimeUnit.DAYS);
+            boolean t = pool.awaitTermination(9999, TimeUnit.DAYS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -152,7 +150,7 @@ public class HBaseBench {
     }
 
     private static void sendMessage(String name, TreeMap<String, List<String>> inverted) throws IOException {
-        var admin = connection.getAdmin();
+        org.apache.hadoop.hbase.client.Admin admin = connection.getAdmin();
         HTableDescriptor table = new HTableDescriptor(TableName.valueOf(name));
         table.addFamily(new HColumnDescriptor("DEFAULT").setCompressionType(Compression.Algorithm.NONE));
         if (admin.tableExists(TableName.valueOf(name))) {
@@ -163,7 +161,7 @@ public class HBaseBench {
         admin.createTable(table);
         Table t = connection.getTable(TableName.valueOf(name));
         int c = 0;
-        for (var part :
+        for (String part :
                 inverted.get(name)) {
             try (FileReader f = new FileReader("/var/home/liontao/Documents/data/filtered/" + part)) {
                 BufferedReader in = new BufferedReader(f);

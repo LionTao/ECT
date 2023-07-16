@@ -1,10 +1,5 @@
 package cn.edu.suda.ada.strajdb.query;
 
-import com.aliyun.oss.ClientException;
-import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.OSSException;
-import com.aliyun.oss.model.PutObjectRequest;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
@@ -13,7 +8,6 @@ import io.minio.PutObjectArgs;
 import io.minio.errors.*;
 import lombok.Builder;
 import lombok.Data;
-import lombok.var;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -21,7 +15,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;

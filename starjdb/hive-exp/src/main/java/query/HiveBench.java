@@ -1,4 +1,4 @@
-package cn.edu.suda.ada.strajdb.query;
+package query;
 
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import lombok.Builder;
@@ -8,7 +8,10 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
 import java.io.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

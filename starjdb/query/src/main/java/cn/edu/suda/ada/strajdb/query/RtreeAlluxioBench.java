@@ -17,7 +17,6 @@ import io.minio.errors.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
-import lombok.var;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 

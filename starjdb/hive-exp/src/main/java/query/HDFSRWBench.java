@@ -1,4 +1,4 @@
-package cn.edu.suda.ada.strajdb.query;
+package query;
 
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import lombok.Builder;

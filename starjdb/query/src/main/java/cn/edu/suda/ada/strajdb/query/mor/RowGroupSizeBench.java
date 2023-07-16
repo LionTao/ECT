@@ -2,7 +2,6 @@ package cn.edu.suda.ada.strajdb.query.mor;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.var;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -39,7 +38,7 @@ public class RowGroupSizeBench {
     }
 
     public static Result worker(String filename) throws IOException {
-        var p = new Path("s3a://warehouse/"+filename);
+        var p = new Path("s3a://warehouse/" + filename);
         try (ParquetFileReader r = ParquetFileReader.open(HadoopInputFile.fromPath(p, hadoopConfig), ParquetReadOptions.builder().useStatsFilter().build())) {
             System.out.println(r.getRowGroups().size());
         }
