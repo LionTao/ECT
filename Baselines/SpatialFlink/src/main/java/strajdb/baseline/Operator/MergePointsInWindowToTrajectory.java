@@ -1,4 +1,4 @@
-package strajdb.baseline.Operator;
+package ect.baseline.Operator;
 
 import GeoFlink.spatialIndices.UniformGrid;
 import GeoFlink.spatialObjects.LineString;

@@ -1,13 +1,13 @@
-# strajdb-thesis
-Real-time distributed trajectory distance calculation system based on elastic load
+# ECT
+ECT: Efficient Elastic Computing for Trajectory Streams in Varying Workloads
 
 ## Quick start
 
 > **Note**: Install [dapr](https://docs.dapr.io/getting-started/install-dapr-cli/) and docker first
 
 ```shell
-git clone https://github.com/LionTao/strajdb-thesis.git
-cd strajdb-thesis/strajdb
+git clone https://github.com/LionTao/strajdb-thesis.git ect
+cd ect/ect
 docker compose up -d
 mvn -T2C clean compile package install
 dapr run --app-id assembler --app-port 3000 -- mvn -pl assembler spring-boot:run
@@ -17,7 +17,7 @@ dapr run --app-id assembler --app-port 3001 -- mvn -pl grid spring-boot:run
 ### Pushdown experiment
 
 pushdown experiment server will start at  port 9999. 
-You need to adjust parameters in [source file](./starjdb/pushdown/src/main/java/cn/edu/suda/ada/strajdb/PushController.java)
+You need to adjust parameters in [source file](./ect/pushdown/src/main/java/cn/edu/suda/ada/ect/PushController.java)
 
 ```shell
 mvn -pl pushdown spring-boot:run
@@ -35,14 +35,14 @@ mvn -pl pushdown spring-boot:run
 | Folder                   | Description                    |
 |--------------------------|--------------------------------|
 | [Baselines](./baselines) | DITA and GeoFlink as baselines |
-| [strajdb](./strajdb)     | Our solution                   |
+| [ECT](./ect)     | Our solution                   |
 
-## Strajdb (Stream trajectory database)
+## ECT
 
 Our solution is based on [Dapr](https://dapr.io). 
 Most of our components are built with dapr actor.
 
-Strajdb can be devided into three layers: 
+ECT can be devided into three layers: 
 - **Query layer**
 - **Index layer**
 - **Storage layer**.
@@ -70,12 +70,12 @@ It contains two major modules:
 
 ## Module structure
 
-| Name       | Folder                                       | Language | Actor |
-|------------|----------------------------------------------|----------|-------|
-| Assembler  | [strajdb-assembler](./strajdb/assembler)     | Java     | ✅     |
-| Grid index | [strajdb-grid](./strajdb/grid)               | Java     | ✅     |
-| Agent      | [strajdb-query](./strajdb/query)             | Java     | ✅     |
-| Compute    | [strajdb-compute](./strajdb/stream-distance) | Python3  | ✅     |
-| MOR        | [strajdb-mor](./strajdb/mor)                 | Java     | ✅     |
-| Pushdown   | [strajdb-pushdown](./strajdb/pushdown)       | Java     | ✅     |
+| Name       | Folder                           | Language | Actor |
+|------------|----------------------------------|----------|-------|
+| Assembler  | [assembler](./ect/assembler)     | Java     | ✅     |
+| Grid index | [grid](./ect/grid)               | Java     | ✅     |
+| Agent      | [query](./ect/query)             | Java     | ✅     |
+| Compute    | [compute](./ect/stream-distance) | Python3  | ✅     |
+| MOR        | [mor](./ect/mor)                 | Java     | ✅     |
+| Pushdown   | [pushdown](./ect/pushdown)       | Java     | ✅     |
 

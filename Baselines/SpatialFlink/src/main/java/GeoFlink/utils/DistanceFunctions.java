@@ -7,7 +7,7 @@ import GeoFlink.spatialObjects.Polygon;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.locationtech.jts.geom.Coordinate;
-import strajdb.baseline.Operator.TrajectoryDistance;
+import ect.baseline.Operator.TrajectoryDistance;
 
 public class DistanceFunctions {
 

@@ -1,4 +1,4 @@
-package strajdb.baseline;
+package ect.baseline;
 
 import GeoFlink.spatialIndices.UniformGrid;
 import GeoFlink.spatialObjects.LineString;
@@ -29,8 +29,8 @@ import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindow
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.kafka.common.protocol.types.Field;
 import org.locationtech.jts.geom.Coordinate;
-import strajdb.baseline.Operator.MergePointsInWindowToTrajectory;
-import strajdb.baseline.Operator.EveryElementTriggers;
+import ect.baseline.Operator.MergePointsInWindowToTrajectory;
+import ect.baseline.Operator.EveryElementTriggers;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;

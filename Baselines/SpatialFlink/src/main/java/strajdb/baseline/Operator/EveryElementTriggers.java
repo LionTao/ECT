@@ -1,4 +1,4 @@
-package strajdb.baseline.Operator;
+package ect.baseline.Operator;
 
 import GeoFlink.spatialObjects.Point;
 import org.apache.flink.streaming.api.windowing.triggers.Trigger;
