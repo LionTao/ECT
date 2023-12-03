@@ -6,7 +6,7 @@ ECT: Efficient Elastic Computing for Trajectory Streams in Varying Workloads
 > **Note**: Install [dapr](https://docs.dapr.io/getting-started/install-dapr-cli/) and docker first
 
 ```shell
-git clone https://github.com/LionTao/strajdb-thesis.git ect
+git clone https://github.com/LionTao/ECT.git ect
 cd ect/ect
 docker compose up -d
 mvn -T2C clean compile package install
