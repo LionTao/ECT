@@ -1,5 +1,5 @@
 # ECT
-ECT: Efficient Elastic Computing for Trajectory Streams in Varying Workloads
+ECT: Efficient Elastic Computing for Dynamic Trajectory Streams
 
 ## Quick start
 
