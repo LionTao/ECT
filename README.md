@@ -23,13 +23,6 @@ You need to adjust parameters in [source file](./ect/pushdown/src/main/java/cn/e
 mvn -pl pushdown spring-boot:run
 ```
 
-### WIP
-
-- [ ] QueryAgent actors
-- [ ] MOR actors
-- [ ] Pushdown actors
-- [ ] Stream distance for java
-
 ## Project structure
 
 | Folder                   | Description                    |
