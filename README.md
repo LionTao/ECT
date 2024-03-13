@@ -1,6 +1,9 @@
 # ECT
 ECT: Efficient Elastic Computing for Dynamic Trajectory Streams
 
+<img width="849" alt="ab8fdbce981f4119e7c5bfc1ac1ea08" src="https://github.com/LionTao/ECT/assets/26898979/1ba1ec30-749a-48aa-926d-1dd775c5d806">
+
+
 ## Quick start
 
 > **Note**: Install [dapr](https://docs.dapr.io/getting-started/install-dapr-cli/) and docker first
